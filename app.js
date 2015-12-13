@@ -1,27 +1,26 @@
-var PouchDB = require('pouchdb')
+const PouchDB = require('pouchdb')
+var db = new PouchDB('http://localhost:5984/kittens')
 
-var db = new PouchDB('kittens')
+db.bulkDocs([
+  {
+    _id: 'mittens',
+    cuteness: '9.0',
+    occupation: 'kitten'
+  },
+  {
+    _id: 'littens',
+    cuteness: '7.0',
+    occupation: 'kitten'
+  },
+  {
+    _id: 'fittens',
+    cuteness: '8.5',
+    occupation: 'kitten'
+  }
+])
 
-var doc = {
-  '_id': '1',
-  'name': 'charlotte'
-}
-db.put(doc)
-
-var doc2 = {
-  '_id': '2',
-  'name': 'shawn'
-}
-db.put(doc2)
-
-db.get('1').then(doc => {
-  doc.name = 'ngehwee'
-  return db.put(doc)
-}).then(() => db.get('1')
-).then(doc =>
-  console.log(doc)
-)
-
-db.info().then(info =>
-  console.log(info)
-)
+db.allDocs({
+  include_docs: true,
+  attachments: true
+}).then(result => console.log(result.rows[0]))
+.catch(err => console.log(err))
